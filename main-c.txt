@@ -1,7 +1,7 @@
 /* ================================================================
    Mercaderías Modernas – Sistema básico de gestión de inventarios
    Lenguaje: C (C11)
-   Autor: [Tu nombre]
+   Autor: [Antonio]
    Fecha: 2025
    Descripción:
    Este programa demuestra el uso de sentencias de control (if–else,
@@ -107,3 +107,4 @@ int main(void) {
 
     return 0;
 }
+
