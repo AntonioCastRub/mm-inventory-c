@@ -1,0 +1,109 @@
+/* ================================================================
+   Mercaderías Modernas – Sistema básico de gestión de inventarios
+   Lenguaje: C (C11)
+   Autor: [Tu nombre]
+   Fecha: 2025
+   Descripción:
+   Este programa demuestra el uso de sentencias de control (if–else,
+   switch, while, do–while y for) en la gestión de inventarios de una
+   PYME del sector retail, simulando reabastecimiento, control de
+   acceso y procesamiento secuencial de productos.
+
+   Restricciones:
+   - Sin arreglos, punteros ni estructuras.
+   - Solo uso de variables y constantes.
+
+   ================================================================ */
+
+#include <stdio.h>
+
+int main(void) {
+
+    /* === Declaración de constantes === */
+    const int STOCK_THRESHOLD   = 50;   // Umbral mínimo de inventario
+    const int MAX_ATTEMPTS      = 3;    // Intentos máximos de acceso
+    const int MAX_ITEMS_PROCESS = 14;   // Ítems a procesar (simulación)
+    const int EFF_BEFORE        = 70;   // Eficiencia antes del sistema (%)
+    const int EFF_AFTER         = 95;   // Eficiencia después del sistema (%)
+    const int PASSWORD          = 1234; // Contraseña de acceso simulada
+
+    /* === Declaración de variables === */
+    int current_stock   = 45;   // Inventario inicial (dato cuantitativo)
+    int reorder_amount  = 0;    // Cantidad a reponer
+    int attempt         = 0;    // Contador de intentos
+    int password_ok     = 0;    // Bandera de autenticación
+    int user_input      = 0;    // Entrada del usuario
+    int processed       = 0;    // Contador del bucle do–while
+    int day;                    // Día del ciclo for
+    int sales_per_day   = 3;    // Ventas promedio diarias
+    int improvement     = EFF_AFTER - EFF_BEFORE;  // Mejora en eficiencia
+
+    /* === 1) if–else: política de reposición automática === */
+    if (current_stock < STOCK_THRESHOLD) {
+        reorder_amount = STOCK_THRESHOLD - current_stock;
+        printf("Reorder %d items to reach the stock threshold.\n", reorder_amount);
+        current_stock += reorder_amount;
+    } else {
+        printf("Stock level is sufficient.\n");
+    }
+
+    /* === 2) while: control de acceso con intentos limitados === */
+    while (attempt < MAX_ATTEMPTS && !password_ok) {
+        printf("\nLogin:\n  Enter password (1234): ");
+        if (scanf("%d", &user_input) != 1) {
+            attempt++;
+            printf("Invalid input. Attempt %d of %d\n", attempt, MAX_ATTEMPTS);
+            while (getchar() != '\n'); // limpiar buffer de entrada
+        } else if (user_input == PASSWORD) {
+            password_ok = 1;
+            printf("Access granted\n");
+        } else {
+            attempt++;
+            printf("Incorrect password. Attempt %d of %d\n", attempt, MAX_ATTEMPTS);
+        }
+    }
+
+    if (!password_ok) {
+        printf("Access denied. Too many incorrect attempts.\n");
+        return 1; // Fin del programa por error de autenticación
+    }
+
+    /* === 3) for: simulación de ventas diarias === */
+    for (day = 1; day <= 5; day++) {
+        current_stock -= sales_per_day; // reducir stock por ventas
+
+        if (current_stock < STOCK_THRESHOLD) {
+            int top_up = STOCK_THRESHOLD - current_stock;
+            current_stock += top_up;
+            printf("Day %d: Auto-reorder %d to keep >= threshold. Stock=%d\n",
+                   day, top_up, current_stock);
+        } else {
+            printf("Day %d: Stock OK. Stock=%d\n", day, current_stock);
+        }
+    }
+
+    /* === 4) switch: evaluación de la mejora en eficiencia === */
+    switch (improvement) {
+        case 25:
+            printf("Efficiency improved by %d%% (average vs peers).\n", improvement);
+            break;
+        case 30:
+            printf("Efficiency improved by %d%% (above average vs peers).\n", improvement);
+            break;
+        default:
+            printf("Efficiency improved by %d%% (significant).\n", improvement);
+            break;
+    }
+
+    /* === 5) do–while: procesamiento secuencial de ítems === */
+    do {
+        printf("Processing item %d\n", processed + 1);
+        processed++;
+    } while (processed < MAX_ITEMS_PROCESS);
+
+    /* === Conclusión === */
+    printf("All items processed successfully.\n");
+    printf("Consider using advanced data structures for larger inventories.\n");
+
+    return 0;
+}
